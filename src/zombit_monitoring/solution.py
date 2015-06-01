@@ -24,5 +24,17 @@ def answer(intervals):
     Output:
         (int) 16
     '''
-    value = min(intervals, key = lambda t: t[0])
-    lastmin = intervals.pop(intervals.index(value))
+    totaltime = 0
+    _, lastmax = (0, 0)
+    while len(intervals) > 0:
+        value = min(intervals, key=lambda t: t[0])
+        value = intervals.pop(intervals.index(value))
+        thismin, thismax = value
+        if thismin > lastmax:
+            totaltime += thismax-thismin
+            _, lastmax = value
+        else:
+            if thismax > lastmax:
+                totaltime += thismax-lastmax
+                _, lastmax = value
+    return totaltime
