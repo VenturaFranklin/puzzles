@@ -3,6 +3,17 @@ Created on Jun 1, 2015
 
 @author: venturf2
 '''
+from collections import Counter
+CONNECTIONS = {1:[8, 6],
+               2:[7, 9],
+               3:[4, 8],
+               4:[3, 9, 0],
+               5:[],
+               6:[0, 1, 7],
+               7:[2, 6],
+               8:[1, 3],
+               9:[2, 4],
+               0:[4, 6]}
 
 def answer(start, end, totaldigits):
     '''Each digit that is dialed has to be a number that
@@ -60,18 +71,50 @@ def answer(start, end, totaldigits):
     Output:
         (string) "0"
     '''
-    connections = {1:[8,6],
-                   2:[7,9],
-                   3:[4,8],
-                   4:[3,9,0],
-                   5:[],
-                   6:[0,1,7],
-                   7:[2,6],
-                   8:[1,3],
-                   9:[2,4],
-                   0:[4,6]
-                   }
-    count=0
-    while len(count)*2<totaldigits:
-        nextnumbers.append(connections[start])
-        lastnumber.append(connections[end])
+
+    if totaldigits == 1:
+        if start != end:
+            return "0"
+        else: return "1"
+    elif start == 5 or end == 5:
+        return "0"
+
+    oldnextnumbers, oldlastnumbers = Counter([start]), Counter([end])
+    count = 1
+    while True:
+        nextnumbers = update(oldnextnumbers)
+        del oldnextnumbers
+        count += 1
+        if count >= totaldigits:
+            return str(compare(nextnumbers, oldlastnumbers))
+        lastnumbers = update(oldlastnumbers)
+        del oldlastnumbers
+        count += 1
+        if count >= totaldigits:
+            return str(compare(nextnumbers, lastnumbers))
+        oldnextnumbers = nextnumbers.copy()
+        oldlastnumbers = lastnumbers.copy()
+
+
+def update(oldcounter):
+    '''updates a counter based on the keys'''
+    newcounter = Counter()
+    for key in oldcounter.keys():
+        updatevalue = oldcounter[key]
+        newkeys = CONNECTIONS[key]
+        for newkey in newkeys:
+            if not newcounter.has_key(newkey):
+                newcounter.update([newkey])
+                newcounter[newkey] -= 1
+            newcounter[newkey] += updatevalue
+    return newcounter
+
+def compare(children, parent):
+    '''Compares two counters to see common elements'''
+    count = 0
+    for key in children:
+        if parent.has_key(key):
+            childcount = children[key]
+            parentcount = parent[key]
+            count += childcount*parentcount
+    return count
