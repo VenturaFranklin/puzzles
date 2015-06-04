@@ -3,11 +3,11 @@ Created on Jun 2, 2015
 
 @author: venturf2
 '''
-from itertools import chain, combinations
+from itertools import chain, combinations_with_replacement
 
-def test():
-    for number in [24,160,9984]:
-        print answer(number)
+# def test():
+#     for number in [24,160,9984]:
+#         print answer(number)
 
 # @profile
 def answer(totalcoins):
@@ -17,7 +17,7 @@ def answer(totalcoins):
     some gauze pads but you only have 30 seconds before you need to be back.
 
     Luckily, the corner store has unlimited gauze pads in squares of all sizes.
-    Jackpot! The pricing is simple - a square gauze pad of size K x K costs exactly K * K coins.
+    Jackpot! The pricing is simple - a square gauze pad of size K value K costs exactly K * K coins.
     For example, a gauze pad of size 3x3 costs 9 coins.
 
     You're in a hurry and the cashier takes a long time to process each transaction.
@@ -49,22 +49,21 @@ def answer(totalcoins):
     Output:
         (int) 2
     '''
-    cost=0
-    x = 1
-    costs=[]
-    while cost < totalcoins:
-        x += 1
-        cost = x**2
-        if cost < totalcoins:
+    cost = 0
+    value = 1
+    costs = []
+    while cost <= totalcoins:
+        value += 1
+        cost = value**2
+        if cost <= totalcoins:
             costs.append(cost)
-    for combo in powerset(costs):
-#         print combo
+    combos = powerset(costs)
+    for combo in combos:
         if sum(combo) == totalcoins:
             return len(combo)
 
 def powerset(iterable):
     "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
-    s = list(iterable)*3
-    return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
-
-test()
+    mylist = list(iterable)
+    return chain.from_iterable(combinations_with_replacement(mylist, r=r)
+                               for r in range(len(mylist)+1))
