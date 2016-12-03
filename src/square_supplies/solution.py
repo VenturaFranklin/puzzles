@@ -44,13 +44,13 @@ def answer(totalcoins):
     Output:
         (int) 2
     '''
-    cost=0
-    x = 1
-    costs=[]
-    while cost < totalcoins:
-        x += 1
-        cost = x**2
-        if cost < totalcoins:
+    cost = 0
+    value = 1
+    costs = []
+    while cost <= totalcoins:
+        value += 1
+        cost = value**2
+        if cost <= totalcoins:
             costs.append(cost)
 #     for combo in powerset(costs):
 # #         print combo
@@ -63,8 +63,18 @@ def answer(totalcoins):
 
 def sum_and_count(x):
     return sum(x),len(x)
+    combos = powerset(costs)
+    for combo in combos:
+        if sum(combo) == totalcoins:
+            return len(combo)
 
 def powerset(iterable):
     "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
     s = list(iterable)*3 #Time limit exceeded
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
+    mylist = list(iterable)
+    return chain.from_iterable(combinations_with_replacement(mylist, r=r)
+                               for r in range(len(mylist)+1))
+    mylist = list(iterable)
+    return chain.from_iterable(combinations_with_replacement(mylist, r=r)
+                               for r in range(len(mylist)+1))
