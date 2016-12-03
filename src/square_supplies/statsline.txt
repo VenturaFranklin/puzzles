@@ -1,0 +1,6 @@
+3
+2
+4
+Wrote profile results to solution.py.lprof
+Timer unit: 4.27624e-07 s
+

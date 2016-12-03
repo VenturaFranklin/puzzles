@@ -5,11 +5,6 @@ Created on Jun 2, 2015
 '''
 from itertools import chain, combinations
 
-def test():
-    for number in [24,160,9984]:
-        print answer(number)
-
-# @profile
 def answer(totalcoins):
     '''With the zombie cure injections ready to go,
     it's time to start treating our zombified rabbit friends (known as zombits)
@@ -57,14 +52,19 @@ def answer(totalcoins):
         cost = x**2
         if cost < totalcoins:
             costs.append(cost)
-    for combo in powerset(costs):
-#         print combo
-        if sum(combo) == totalcoins:
-            return len(combo)
+#     for combo in powerset(costs):
+# #         print combo
+#         if sum(combo) == totalcoins:
+#             return len(combo)
+    combos=powerset(costs)
+    combosums=map(sum_and_count,combos)
+    return combosums
+#     return min([item for item in combosums if item[0] == totalcoins])[1]
+
+def sum_and_count(x):
+    return sum(x),len(x)
 
 def powerset(iterable):
     "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
-    s = list(iterable)*3
+    s = list(iterable)*3 #Time limit exceeded
     return chain.from_iterable(combinations(s, r) for r in range(len(s)+1))
-
-test()
