@@ -40,11 +40,11 @@ error-corrected message, easter.
 Given the recording in your puzzle input, what is the error-corrected
 version of the message being sent?
 '''
+from collections import Counter
 
 
 def test_1():
-    message = '''
-eedadn
+    message = '''eedadn
 drvtee
 eandsr
 raavrd
@@ -59,18 +59,33 @@ tesnvt
 vntsnd
 vrdear
 dvrsen
-enarar
-'''
+enarar'''
     actual_out = run(message)
     expected_out = 'easter'
     assert actual_out == expected_out
 
 
 def run(message):
-    pass
+    message_split = message.split('\n')
+    chars = {}
+    line_len = len(message_split[0])
+    for line in message_split:
+        for i, char in enumerate(line):
+            if i in chars:
+                chars[i].append(char)
+            else:
+                chars[i] = [char]
+    out_message = [0] * line_len
+    for char in chars:
+        letter = Counter(chars[char]).most_common(1)[0][0]
+        out_message[char] = letter
+    out = ''.join(out_message)
+    return out
+
 
 if __name__ == "__main__":
+#     test_1()
     with open('PuzzleInput.txt', 'r') as this_file:
-        out = run(this_file)
+        out = run(this_file.read())
     print(out)
 
