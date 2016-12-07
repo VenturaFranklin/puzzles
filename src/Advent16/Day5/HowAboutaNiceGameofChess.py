@@ -34,6 +34,7 @@ Given the actual Door ID, what is the password?
 
 Your puzzle input is ffykfhsq.
 '''
+import hashlib
 
 
 def test_1():
@@ -44,9 +45,20 @@ def test_1():
 
 
 def run(door_id):
-    pass
+    num = 0
+    out = ''
+    while len(out) < 8:
+        door_id_test = door_id + str(num)
+        hash_test = hashlib.md5(door_id_test.encode('utf-8')).hexdigest()
+        if hash_test[:5] == '00000':
+            out += hash_test[5]
+            print(num, hash_test, out)
+        num += 1
+#         print(num)
+    return out
 
 if __name__ == "__main__":
+#     test_1()
     door_id = 'ffykfhsq'
     out = run(door_id)
     print(out)
