@@ -66,6 +66,17 @@ def test_1():
         assert actual_out == expected_out
 
 
+def test_2():
+    ip_test_list = [('aba[bab]xyz', True),
+                    ('xyx[xyx]xyx', False),
+                    ('aaa[kek]eke', True),
+                    ('zazbz[bzb]cdb', True)]
+    for test in ip_test_list:
+        test_ip, expected_out = test
+        actual_out = run(test_ip)
+        assert actual_out == expected_out
+
+
 def split_ip(test_ip):
     splits = test_ip.split('[')
     all_splits = {'hypernet': [],
@@ -89,33 +100,37 @@ def abba(test):
         return first == second
 
 
-def subgroups(this_string):
-    return [this_string[i:i+4] for i in range(len(this_string))
-            if i+4 <= len(this_string)]
+def aba(test):
+    return (test[0] == test[2]) & (test[0] != test[1])
+
+
+def aba_bab(abas, test):
+    for aba in abas:
+        if (aba[0] == test[1]) & (aba[1] == test[0]):
+            return True
+    return False
+
+
+def subgroups(this_string, sub_len=3):
+    return [this_string[i:i+sub_len] for i in range(len(this_string))
+            if i+sub_len <= len(this_string)]
 
 
 def run(test_ip):
     splits = split_ip(test_ip)
-    TLS = False
+    abas = []
     for test_split in splits['supernet']:
         for test in subgroups(test_split):
-            if abba(test):
-                TLS = True
-                break
-        if TLS:
-            break
-    if TLS:
-        for test_split in splits['hypernet']:
-            for test in subgroups(test_split):
-                if abba(test):
-                    TLS = False
-                    break
-            if not TLS:
-                break
-    return TLS
+            if aba(test):
+                abas.append(test)
+    for test_split in splits['hypernet']:
+        for test in subgroups(test_split):
+            if aba(test):
+                if aba_bab(abas, test):
+                    return True
+    return False
 
 if __name__ == "__main__":
-#     test_1()
     count = 0
     with open('PuzzleInput.txt', 'r') as this_file:
         for test_ip in this_file:
