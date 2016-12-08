@@ -63,6 +63,13 @@ tries to convince you, anyway.
 There seems to be an intermediate check of the voltage used by the display:
 after you swipe your card, if the screen did work,
 how many pixels should be lit?
+
+--- Part Two ---
+
+You notice that the screen is only capable of displaying capital letters;
+in the font it uses, each letter is 5 pixels wide and 6 tall.
+
+After you swipe your card, what code is the screen trying to display?
 '''
 from numpy import array, roll, zeros, count_nonzero
 
@@ -101,9 +108,8 @@ def run(instructions, main_array):
     return main_array
 
 if __name__ == "__main__":
-#     test_1()
     main_array = zeros((6, 50))
     with open('PuzzleInput.txt', 'r') as this_file:
         out = run(this_file.read(), main_array)
-    print(count_nonzero(out))
+    print(out)
 
