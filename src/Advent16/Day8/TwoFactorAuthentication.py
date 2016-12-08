@@ -64,6 +64,7 @@ There seems to be an intermediate check of the voltage used by the display:
 after you swipe your card, if the screen did work,
 how many pixels should be lit?
 '''
+from numpy import array, roll, zeros, count_nonzero
 
 
 def test_1():
@@ -71,18 +72,38 @@ def test_1():
 rotate column x=1 by 1
 rotate row y=0 by 4
 rotate column x=1 by 1'''
-    actual_out = run(instructions)
-    expected_out = '''.#..#.#
-#.#....
-.#.....'''
-    assert actual_out == expected_out
+    main_array = zeros((3, 7))
+    actual_out = run(instructions, main_array)
+    expected_out = array([[0, 1, 0, 0, 1, 0, 1],
+                          [1, 0, 1, 0, 0, 0, 0],
+                          [0, 1, 0, 0, 0, 0, 0]])
+    assert actual_out.all() == expected_out.all()
 
 
-def run(instructions):
-    pass
+def run(instructions, main_array):
+    instructions = instructions.split('\n')
+    for instruction in instructions:
+        if 'rect' in instruction:
+            a, b = instruction.split(' ')[1].split('x')
+            main_array[0:int(b), 0:int(a)] = 1
+        else:
+            direction, shift = instruction.split('=')
+            direction = int(direction[-1] == 'y')
+            start, shift = shift.split(' by ')
+            start, shift = int(start), int(shift)
+            shifted = roll(main_array, shift, direction)
+            if direction:
+                shifted_row = shifted[start]
+                main_array[start] = shifted_row
+            else:
+                shifted_col = shifted[:, start]
+                main_array[:, start] = shifted_col
+    return main_array
 
 if __name__ == "__main__":
+#     test_1()
+    main_array = zeros((6, 50))
     with open('PuzzleInput.txt', 'r') as this_file:
-        out = run(this_file.read())
-    print(out)
+        out = run(this_file.read(), main_array)
+    print(count_nonzero(out))
 
