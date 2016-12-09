@@ -42,3 +42,41 @@ is skipped and not processed further.
 What is the decompressed length of the file (your puzzle input)?
 Don't count whitespace.
 '''
+
+
+def test_1():
+    tests = [('ADVENT', 'ADVENT'),
+             ('A(1x5)BC', 'ABBBBBC'),
+             ('(3x3)XYZ', 'XYZXYZXYZ'),
+             ('A(2x2)BCD(2x2)EFG', 'ABCBCDEFEFG'),
+             ('(6x1)(1x3)A', '(1x3)A'),
+             ('X(8x2)(3x3)ABCY', 'X(3x3)ABC(3x3)ABCY')]
+    for test in tests:
+        compressed, expected_out = test
+        actual_out = run(compressed)
+        assert actual_out == expected_out
+
+
+def run(compressed):
+    decompressed = ''
+    while len(compressed) > 0:
+        char = compressed[0]
+        if char == '(':
+            end_ind = compressed.find(')') + 1
+            instruction = compressed[:end_ind]
+            instruction = instruction.replace('(', '').replace(')', '')
+            num, repeat = instruction.split('x')
+            num, repeat = int(num), int(repeat)
+            chars = compressed[end_ind:end_ind+num]
+            char = chars * repeat
+            compressed = compressed[end_ind+(num):]
+        else:
+            compressed = compressed[1:]
+        decompressed += char
+    return decompressed
+
+if __name__ == "__main__":
+    with open('PuzzleInput.txt', 'r') as this_file:
+        out = run(this_file.read())
+    out = out.replace(' ', '')
+    print(len(out))
