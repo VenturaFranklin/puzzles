@@ -41,6 +41,33 @@ because the decompressed data from the (8x2) marker (the (3x3)ABC)
 is skipped and not processed further.
 What is the decompressed length of the file (your puzzle input)?
 Don't count whitespace.
+
+--- Part Two ---
+
+Apparently, the file actually uses version two of the format.
+
+In version two, the only difference is that markers within decompressed
+data are decompressed. This, the documentation explains,
+provides much more substantial compression capabilities,
+allowing many-gigabyte files to be stored in only a few kilobytes.
+
+For example:
+
+(3x3)XYZ still becomes XYZXYZXYZ,
+as the decompressed section contains no markers.
+X(8x2)(3x3)ABCY becomes XABCABCABCABCABCABCY,
+because the decompressed data from the (8x2)
+marker is then further decompressed,
+thus triggering the (3x3) marker twice for a total of six ABC sequences.
+(27x12)(20x12)(13x14)(7x10)(1x12)A
+decompresses into a string of A repeated 241920 times.
+(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN
+becomes 445 characters long.
+Unfortunately, the computer you brought probably doesn't have enough memory to
+actually decompress the file;
+you'll have to come up with another way to get its decompressed length.
+
+What is the decompressed length of the file using this improved format?
 '''
 
 
@@ -55,6 +82,44 @@ def test_1():
         compressed, expected_out = test
         actual_out = run(compressed)
         assert actual_out == expected_out
+
+
+def test_2():
+    tests = [('(3x3)XYZ', 9),
+             ('X(8x2)(3x3)ABCY', 20),
+             ('(27x12)(20x12)(13x14)(7x10)(1x12)A', 241920),
+             ('(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN', 445)]
+    for test in tests:
+        compressed, expected_out = test
+        actual_out = run2(compressed)
+        assert actual_out == expected_out
+
+
+def get_instructions(compressed, count=0):
+    end_ind = compressed.find(')') + 1
+    start_ind = compressed.find('(')
+    instruction = compressed[start_ind]
+    instruction = instruction.replace('(', '').replace(')', '')
+    num, repeat = instruction.split('x')
+    num, repeat = int(num), int(repeat)
+    chars = compressed[end_ind:end_ind+num]
+    compressed = compressed[end_ind+(num):]
+    if '(' in compressed:
+        count = get_instructions(compressed, count)
+        return count*repeat
+    else:
+        return num*repeat
+
+
+# def run2(compressed):
+#     if char == '(':
+#         while '(' in sub_group:
+#             sub_group = get_instructions(compressed)
+#             
+#             char = chars * repeat
+#             compressed = compressed[end_ind+(num):]
+#         else:
+#             compressed = compressed[1:]
 
 
 def run(compressed):
