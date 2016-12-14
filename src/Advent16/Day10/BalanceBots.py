@@ -47,6 +47,11 @@ microchips with value-2 microchips.
 
 Based on your instructions, what is the number of the bot that is responsible
 for comparing value-61 microchips with value-17 microchips?
+
+--- Part Two ---
+
+What do you get if you multiply together the
+values of one chip in each of outputs 0, 1, and 2?
 '''
 
 
@@ -110,28 +115,31 @@ value 2 goes to bot 2'''
 
 def run(instructions, test):
     parsed_instr, bots, count = parse_instructions(instructions)
+    out = {}
     while count > 0:
         for bot in bots:
             if len(bots[bot]) > 1:
                 low, high = parsed_instr[bot]
                 low_type, low_bot = low
-                if (test[0] in bots[bot]) & (test[1] in bots[bot]):
-                    return bot
+#                 if (test[0] in bots[bot]) & (test[1] in bots[bot]):
+#                     return bot
                 bots[bot].sort(key=float)
                 if low_type == 'bot':
                     extend_bot_vals(bots, low_bot, bots[bot][0])
                 else:
+                    out[low_bot] = bots[bot][0]
                     count -= 1
                 high_type, high_bot = high
                 if high_type == 'bot':
                     extend_bot_vals(bots, high_bot, bots[bot][1])
                 else:
+                    out[high_bot] = bots[bot][1]
                     count -= 1
                 bots[bot] = []
+    return out
 
 if __name__ == "__main__":
-#     test_1()
     test = ('17', '61')
     with open('PuzzleInput.txt', 'r') as this_file:
         out = run(this_file.read().split('\n'), test)
-    print(out)
+    print(int(out['0'])*int(out['1'])*int(out['2']))
