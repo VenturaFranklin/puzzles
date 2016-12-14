@@ -53,6 +53,15 @@ When you move past the last instruction, the program halts.
 
 After executing the assembunny code in your puzzle input,
 what value is left in register a?
+
+--- Part Two ---
+
+As you head down the fire escape to the monorail,
+you notice it didn't start;
+register c needs to be initialized to the position of the ignition key.
+
+If you instead initialize register c to be 1,
+what value is now left in register a?
 '''
 
 
@@ -125,7 +134,7 @@ if __name__ == "__main__":
 #     test_1()
     registers = {'a': 0,
                  'b': 0,
-                 'c': 0,
+                 'c': 1,
                  'd': 0}
     with open('PuzzleInput.txt', 'r') as this_file:
         out = run(this_file.read(), registers)
