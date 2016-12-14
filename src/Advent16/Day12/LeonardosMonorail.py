@@ -54,3 +54,79 @@ When you move past the last instruction, the program halts.
 After executing the assembunny code in your puzzle input,
 what value is left in register a?
 '''
+
+
+def inc(instruct, registers):
+    _, register = instruct.split(' ')
+    registers[register] += 1
+    return registers, False
+
+
+def dec(instruct, registers):
+    _, register = instruct.split(' ')
+    registers[register] -= 1
+    return registers, False
+
+
+def jnz(instruct, registers):
+    _, register, value = instruct.split(' ')
+    try:
+        test = int(register)
+    except ValueError:
+        test = registers[register]
+    if test != 0:
+        instruct_ind = int(value)
+    else:
+        instruct_ind = False
+    return registers, instruct_ind
+
+
+def cpy(instruct, registers):
+    _, value, register = instruct.split(' ')
+    try:
+        value = int(value)
+    except ValueError:
+        value = registers[value]
+    registers[register] = value
+    return registers, False
+
+
+def test_1():
+    registers = {'a': 0,
+                 'b': 0,
+                 'c': 0,
+                 'd': 0}
+    instructions = '''cpy 41 a
+inc a
+inc a
+dec a
+jnz a 2
+dec a'''
+    actual_out = run(instructions, registers)
+    expected_out = 42
+    assert actual_out['a'] == expected_out
+
+
+def run(instructions, registers):
+    instructions = instructions.split('\n')
+    instruct_ind = 0
+    while instruct_ind < len(instructions):
+        instruct = instructions[instruct_ind]
+        func = instruct[:3]
+        registers, new_ind = globals()[func](instruct, registers)
+        if new_ind:
+            instruct_ind += new_ind
+        else:
+            instruct_ind += 1
+    return registers
+
+
+if __name__ == "__main__":
+#     test_1()
+    registers = {'a': 0,
+                 'b': 0,
+                 'c': 0,
+                 'd': 0}
+    with open('PuzzleInput.txt', 'r') as this_file:
+        out = run(this_file.read(), registers)
+    print(out['a'])
