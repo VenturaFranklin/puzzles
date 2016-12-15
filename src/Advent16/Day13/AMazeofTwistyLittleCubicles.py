@@ -57,3 +57,65 @@ What is the fewest number of steps required for you to reach 31,39?
 
 Your puzzle input is 1352.
 '''
+from heapq import heappop, heappush
+
+
+def test_1():
+    destination = (7, 4)
+    actual_out = run(destination)
+    actual_out = len(actual_out.split('),'))
+    expected_out = 11
+    assert actual_out == expected_out
+
+
+def check_open(coord):
+    x, y = coord
+    out = x*x + 3*x + 2*x*y + y + y*y
+    out += INPUT
+    out = "{0:b}".format(out)
+    return not out.count('1') % 2
+
+
+def find_neighbors(coord):
+    ''' (1, 1)
+    x-1, x+1, y-1, y+1
+    '''
+    x, y = coord
+    neighbors_test = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+    neighbors = []
+    for neighbor in neighbors_test:
+        if check_open(coord):
+            neighbors.append(neighbor)
+    return neighbors
+
+
+def run(destination):
+    start, goal = (1, 1), destination
+    pr_queue = []
+    heappush(pr_queue, (0,
+                        0,
+                        "",
+                        start))
+    visited = set()
+    while pr_queue:
+        _, cost, path, current = heappop(pr_queue)
+        if current == goal:
+            return path
+        if current in visited:
+            continue
+        visited.add(current)
+        neighbors = find_neighbors(current)
+        for neighbor in neighbors:
+            heappush(pr_queue, (cost + 1,
+                                cost + 1,
+                                path + ', ' + str(neighbor),
+                                neighbor))
+    return "NO WAY!"
+
+if __name__ == "__main__":
+#     INPUT_TEST = 10
+#     test_1()
+    INPUT = 1352
+    destination = (31, 39)
+    out = run(destination)
+    print len(out.split('),'))
