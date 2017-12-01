@@ -48,19 +48,28 @@ is the last digit, 9.
 '''
 
 
-def test_p1():
+def test_p10():
     testing = 1122
     actual_out = run(testing)
     expected_out = 3
     assert actual_out == expected_out
+
+
+def test_p11():
     testing = 1111
     actual_out = run(testing)
     expected_out = 4
     assert actual_out == expected_out
+
+
+def test_p12():
     testing = 1234
     actual_out = run(testing)
     expected_out = 0
     assert actual_out == expected_out
+
+
+def test_p13():
     testing = 91212129
     actual_out = run(testing)
     expected_out = 9
