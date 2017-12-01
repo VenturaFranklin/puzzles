@@ -77,7 +77,11 @@ def test_p13():
 
 
 def run(input):
-    out = input
+    out = 0
+    input = str(input)
+    for i, num in enumerate(input):
+        if num == input[(i+1)%len(input)]:
+            out += int(num)
     return out
 
 if __name__ == "__main__":
