@@ -32,7 +32,7 @@ It goes on to explain that you may only leave by solving a captcha to
 prove you're not a human. Apparently, you only get one millisecond to
 solve the captcha: too fast for a normal human, but it feels like hours to you.
 
-The captcha requires you to review a sequence of digits (your puzzle input)
+The captcha requires you to review a sequence of digits (your puzzle test)
 and find the sum of all digits that match the next digit in the list.
 The list is circular, so the digit after the last digit is the first
 digit in the list.
@@ -45,6 +45,29 @@ the second digit and the third digit (2) matches the fourth digit.
 1234 produces 0 because no digit matches the next.
 91212129 produces 9 because the only digit that matches the next one
 is the last digit, 9.
+
+--- Part Two ---
+
+You notice a progress bar that jumps to 50% completion.
+Apparently, the door isn't yet satisfied, but it did emit a star as
+encouragement. The instructions change:
+
+Now, instead of considering the next digit, it wants you to consider
+the digit halfway around the circular list.
+That is, if your list contains 10 items, only include a digit in your
+sum if the digit 10/2 = 5 steps forward matches it.
+Fortunately, your list has an even number of elements.
+
+For example:
+
+1212 produces 6: the list contains 4 items,
+and all four digits match the digit 2 items ahead.
+1221 produces 0, because every comparison is between a 1 and a 2.
+123425 produces 4, because both 2s match each other,
+but no other digit has a match.
+123123 produces 12.
+12131415 produces 4.
+What is the solution to your new captcha?
 '''
 
 
@@ -52,37 +75,91 @@ def test_p10():
     testing = 1122
     actual_out = run(testing)
     expected_out = 3
-    assert actual_out == expected_out
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
 
 
 def test_p11():
     testing = 1111
     actual_out = run(testing)
     expected_out = 4
-    assert actual_out == expected_out
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
 
 
 def test_p12():
     testing = 1234
     actual_out = run(testing)
     expected_out = 0
-    assert actual_out == expected_out
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
 
 
 def test_p13():
     testing = 91212129
     actual_out = run(testing)
     expected_out = 9
-    assert actual_out == expected_out
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
 
 
-def run(input):
+def run(test):
     out = 0
-    input = str(input)
-    for i, num in enumerate(input):
-        if num == input[(i+1)%len(input)]:
+    test = str(test)
+    for i, num in enumerate(test):
+        if num == test[(i+1)%len(test)]:
             out += int(num)
     return out
+
+def test_p20():
+    testing = 1212
+    actual_out = run2(testing)
+    expected_out = 6
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
+
+
+def test_p21():
+    testing = 1221
+    actual_out = run2(testing)
+    expected_out = 0
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
+
+
+def test_p22():
+    testing = 123425
+    actual_out = run2(testing)
+    expected_out = 4
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
+
+
+def test_p23():
+    testing = 123123
+    actual_out = run2(testing)
+    expected_out = 12
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
+
+
+def test_p24():
+    testing = 12131415
+    actual_out = run2(testing)
+    expected_out = 4
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
+
+
+def run2(test):
+    out = 0
+    test = str(test)
+    advance = len(test)/2
+    for i, num in enumerate(test):
+        if num == test[(i+advance)%len(test)]:
+            out += int(num)
+    return out
+
 
 if __name__ == "__main__":
     with open('PuzzleInput.txt', 'r') as this_file:
