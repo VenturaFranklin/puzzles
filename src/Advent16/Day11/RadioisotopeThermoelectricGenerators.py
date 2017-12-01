@@ -164,3 +164,16 @@ even if nothing is added to or removed from it.)
 In your situation, what is the minimum number of steps
 required to bring all of the objects to the fourth floor?
 '''
+
+input = '''F1 TmG TmM PuG     SrG
+F2             PuM     SrM
+F3                         PmG PmM RuG RuM
+F4'''
+
+test_input = [['HM', 'LM'], ['HG'], ['LD'], []]
+'''
+F4 .  .  .  .  .
+F3 .  .  .  LG .
+F2 .  HG .  .  .
+F1 E  .  HM .  LM
+'''

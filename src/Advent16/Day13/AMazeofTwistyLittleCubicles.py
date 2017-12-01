@@ -56,6 +56,11 @@ Thus, reaching 7,4 would take a minimum of 11 steps
 What is the fewest number of steps required for you to reach 31,39?
 
 Your puzzle input is 1352.
+
+--- Part Two ---
+
+How many locations (distinct x,y coordinates,
+including your starting location) can you reach in at most 50 steps?
 '''
 from heapq import heappop, heappush
 
@@ -82,6 +87,7 @@ def find_neighbors(coord):
     '''
     x, y = coord
     neighbors_test = [(x-1, y), (x+1, y), (x, y-1), (x, y+1)]
+    neighbors_test = [(x, y) for x, y in neighbors_test if (x > 0) and (y > 0)]
     neighbors = []
     for neighbor in neighbors_test:
         if check_open(coord):
@@ -92,25 +98,28 @@ def find_neighbors(coord):
 def run(destination):
     start, goal = (1, 1), destination
     pr_queue = []
-    heappush(pr_queue, (0,
-                        0,
-                        "",
+    heappush(pr_queue, (1,
+                        1,
+                        [start],
                         start))
     visited = set()
     while pr_queue:
         _, cost, path, current = heappop(pr_queue)
-        if current == goal:
-            return path
         if current in visited:
+            continue
+        if cost >= 50:
             continue
         visited.add(current)
         neighbors = find_neighbors(current)
         for neighbor in neighbors:
+            new_path = path[:]
+            new_path.append(neighbor)
             heappush(pr_queue, (cost + 1,
                                 cost + 1,
-                                path + ', ' + str(neighbor),
+                                new_path,
                                 neighbor))
-    return "NO WAY!"
+    return visited
+
 
 if __name__ == "__main__":
 #     INPUT_TEST = 10
@@ -118,4 +127,5 @@ if __name__ == "__main__":
     INPUT = 1352
     destination = (31, 39)
     out = run(destination)
-    print len(out.split('),'))
+    print out
+    print len(out)
