@@ -156,12 +156,12 @@ def run2(test):
     test = str(test)
     advance = len(test)/2
     for i, num in enumerate(test):
-        if num == test[(i+advance)%len(test)]:
+        if num == test[int((i+advance)%len(test))]:
             out += int(num)
     return out
 
 
 if __name__ == "__main__":
     with open('PuzzleInput.txt', 'r') as this_file:
-        out = run(this_file.read())
+        out = run2(this_file.read())
     print(out)
