@@ -33,7 +33,7 @@ What is the checksum for the spreadsheet in your puzzle input?
 
 
 def test_p10():
-    testing = '''5 1 9 5\n7 5 3\n2 4 6 8'''
+    testing	=	'''5	1	9	5\n7	5	3\n2	4	6	8'''
     actual_out = run(testing)
     expected_out = 18
     assert actual_out == expected_out, "{} != {}".format(actual_out,
@@ -41,7 +41,15 @@ def test_p10():
 
 
 def run(test):
-    out = test
+    rows = test.split('\n')
+    out = 0
+    for row in rows:
+        cols = row.split('\t')
+        print(cols)
+        cols = [int(x) for x in cols]
+        print(cols)
+        diff = max(cols) - min(cols)
+        out += diff
     return out
 
 
