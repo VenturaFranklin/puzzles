@@ -59,6 +59,7 @@ In this example, the sum of the results would be 4 + 3 + 2 = 9.
 
 What is the sum of each row's result in your puzzle input?
 '''
+import itertools
 
 
 def test_p10():
@@ -90,12 +91,28 @@ def test_p20():
                                                          expected_out)
 
 
+def divisible(combination):
+    a, b = combination
+    if b % a == 0:
+        return b/a
+    elif a % b == 0:
+        return a/b
+    return 0
+
+
 def run2(test):
-    out = test
+    rows = test.split('\n')
+    out = 0
+    for row in rows:
+        cols = row.split('\t')
+        cols = [int(x) for x in cols]
+        val = [divisible(x) for x in itertools.combinations(cols, 2)
+               if divisible(x) > 0][0]
+        out += val
     return out
 
 
 if __name__ == "__main__":
     with open('PuzzleInput.txt', 'r') as this_file:
-        out = run(this_file.read())
+        out = run2(this_file.read())
     print(out)
