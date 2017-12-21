@@ -36,7 +36,16 @@ and leaves that to you to determine.
 What is the largest value in any register after
 completing the instructions in your puzzle input?
 '''
-
+from collections import defaultdict
+import operator
+ops = {
+    '<': operator.lt,
+    '<=': operator.le,
+    '==': operator.eq,
+    '!=': operator.ne,
+    '>=': operator.ge,
+    '>': operator.gt
+    }
 
 def test_p10():
     testing = '''b inc 5 if a > 1
@@ -51,8 +60,22 @@ c inc -20 if c == 10'''
 
 def run(test):
     rows = test.split('\n')
-    out = rows
-    return out
+    values = defaultdict(int)
+    for row in rows:
+        instructions, condition = row.split(' if ')
+        var_check, op, test = condition.split(' ')
+        var_check_val = values[var_check]
+        if 'inc' in instructions:
+            change = 1
+            direction = ' inc '
+        else:
+            change = -1
+            direction = ' dec '
+        if ops[op](var_check_val, int(test)):
+            var_change, val = instructions.split(direction)
+            values[var_change] += int(val) * change
+    print(values)
+    return max([val for val in values.values()])
 
 
 # def test_p20():
