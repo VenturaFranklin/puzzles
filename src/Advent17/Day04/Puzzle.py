@@ -19,32 +19,39 @@ aa bb cc dd aaa is valid - aa and aaa count as different words.
 The system's full passphrase list is available as your puzzle input.
 How many passphrases are valid?
 '''
+# from collections import Counter
 
 
 def test_p10():
     testing = '''aa bb cc dd ee'''
     actual_out = run(testing)
-    expected_out = True
+    expected_out = 1
     assert actual_out == expected_out, "{} != {}".format(actual_out,
                                                          expected_out)
 
 def test_p11():
     testing = '''aa bb cc dd aa'''
     actual_out = run(testing)
-    expected_out = False
+    expected_out = 0
     assert actual_out == expected_out, "{} != {}".format(actual_out,
                                                          expected_out)
 
 def test_p12():
     testing = '''aa bb cc dd aaa'''
     actual_out = run(testing)
-    expected_out = True
+    expected_out = 1
     assert actual_out == expected_out, "{} != {}".format(actual_out,
                                                          expected_out)
 
-def run(test):
-    out = test
-    return out
+def run(passphrases):
+    count = 0
+    passphrases = passphrases.split("\n")
+    for passphrase in passphrases:
+        words = passphrase.split(" ")
+        print(words)
+        valid = int(len(set(words)) == len(words))
+        count += valid
+    return count
 
 
 # def test_p20():
@@ -62,5 +69,6 @@ def run(test):
 
 if __name__ == "__main__":
     with open('input.txt', 'r') as this_file:
-        out = run(this_file.read())
+        text = this_file.read()
+        out = run(text[:-1])  # Because the final new line causes problems
     print(out)
