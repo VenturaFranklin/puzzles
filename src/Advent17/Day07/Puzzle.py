@@ -97,8 +97,18 @@ cntj (57)'''
 
 def run(test):
     rows = test.split('\n')
-    out = rows
-    return out
+    subprogram_names = []
+    supporting_programs = []
+    for row in rows:
+        if '->' in row:
+            supporting_program, subprograms = row.split(' -> ')
+            supporting_program = supporting_program.split(' (')[0]
+            supporting_programs.append(supporting_program)
+            subprograms = subprograms.split(', ')
+            subprogram_names.extend(subprograms)
+#     print(supporting_programs)
+#     print(subprogram_names)
+    return list(set(supporting_programs) - set(subprogram_names))[0]
 
 
 # def test_p20():
@@ -118,5 +128,5 @@ def run2(test):
 if __name__ == "__main__":
     with open('input.txt', 'r') as this_file:
         text = this_file.read()
-        out = run2(text[:-1])  # Because the final new line causes problems
+        out = run(text[:-1])  # Because the final new line causes problems
     print(out)
