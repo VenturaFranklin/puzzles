@@ -18,30 +18,37 @@ aa bb cc dd aa is not valid - the word aa appears more than once.
 aa bb cc dd aaa is valid - aa and aaa count as different words.
 The system's full passphrase list is available as your puzzle input.
 How many passphrases are valid?
+
+--- Part Two ---
+For added security, yet another system policy has been put in place.
+Now, a valid passphrase must contain no two words that are anagrams of
+each other - that is, a passphrase is invalid if any word's letters can be
+rearranged to form any other word in the passphrase.
+
+For example:
+
+abcde fghij is a valid passphrase.
+abcde xyz ecdab is not valid - the letters from the
+    third word can be rearranged to form the first word.
+a ab abc abd abf abj is a valid passphrase,
+    because all letters need to be used when forming another word.
+iiii oiii ooii oooi oooo is valid.
+oiii ioii iioi iiio is not valid - any of these words can be
+    rearranged to form any other word.
+Under this new system policy, how many passphrases are valid?
 '''
 # from collections import Counter
 
 
 def test_p10():
-    testing = '''aa bb cc dd ee'''
+    testing = '''aa bb cc dd ee
+aa bb cc dd aa
+aa bb cc dd aaa'''
     actual_out = run(testing)
-    expected_out = 1
+    expected_out = 2
     assert actual_out == expected_out, "{} != {}".format(actual_out,
                                                          expected_out)
 
-def test_p11():
-    testing = '''aa bb cc dd aa'''
-    actual_out = run(testing)
-    expected_out = 0
-    assert actual_out == expected_out, "{} != {}".format(actual_out,
-                                                         expected_out)
-
-def test_p12():
-    testing = '''aa bb cc dd aaa'''
-    actual_out = run(testing)
-    expected_out = 1
-    assert actual_out == expected_out, "{} != {}".format(actual_out,
-                                                         expected_out)
 
 def run(passphrases):
     count = 0
@@ -54,17 +61,21 @@ def run(passphrases):
     return count
 
 
-# def test_p20():
-#     testing = '''5\t9\t2\t8\n9\t4\t7\t3\n3\t8\t6\t5'''
-#     actual_out = run2(testing)
-#     expected_out = 9
-#     assert actual_out == expected_out, "{} != {}".format(actual_out,
-#                                                          expected_out)
+def test_p20():
+    testing = '''abcde fghij
+abcde xyz ecdab
+a ab abc abd abf abj
+iiii oiii ooii oooi oooo
+oiii ioii iioi iiio'''
+    actual_out = run2(testing)
+    expected_out = 3
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
 
 
-# def run2(test):
-#     out = test
-#     return out
+def run2(test):
+    out = test
+    return out
 
 
 if __name__ == "__main__":
