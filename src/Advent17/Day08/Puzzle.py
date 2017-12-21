@@ -100,6 +100,7 @@ c inc -20 if c == 10'''
 def run2(test):
     rows = test.split('\n')
     values = defaultdict(int)
+    all_vals = []
     for row in rows:
         instructions, condition = row.split(' if ')
         var_check, op, test = condition.split(' ')
@@ -112,13 +113,15 @@ def run2(test):
             direction = ' dec '
         if ops[op](var_check_val, int(test)):
             var_change, val = instructions.split(direction)
-            values[var_change] += int(val) * change
-    print(values)
-    return max([val for val in values.values()])
+            old_val = values[var_change]
+            new_val = old_val + int(val) * change
+            values[var_change] = new_val
+            all_vals.append(new_val)
+    return max(all_vals)
 
 
 if __name__ == "__main__":
     with open('input.txt', 'r') as this_file:
         text = this_file.read()
-        out = run(text[:-1])  # Because the final new line causes problems
+        out = run2(text[:-1])  # Because the final new line causes problems
     print(out)
