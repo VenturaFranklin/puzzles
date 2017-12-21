@@ -62,6 +62,7 @@ Therefore, the first few squares would receive the following values:
 What is the first value written that is larger than your puzzle input?
 '''
 import math
+import operator
 import numpy as np
 
 
@@ -111,9 +112,14 @@ def closest_perfect_sqr(n):
     return power
 
 
+def add_tuple(a, b):
+    return tuple(map(operator.add, a, b))
+
 N, SOUTH, W, E = (0, -1), (0, 1), (-1, 0), (1, 0) # directions
 # turn_right = {NORTH: E, E: S, S: W, W: NORTH} # old -> new direction
 turn_left = {SOUTH: E, E: N, N: W, W: SOUTH} # old -> new direction
+ALL_DIRS = [N, SOUTH, W, E, add_tuple(N, E), add_tuple(N, W),
+            add_tuple(SOUTH, E), add_tuple(SOUTH, W)]
 
 
 def spiral(width, height):
@@ -153,20 +159,56 @@ def run(test):
     return out
 
 
-# def test_p20():
-#     testing = 0
-#     actual_out = run2(testing)
-#     expected_out = 9
-#     assert actual_out == expected_out, "{} != {}".format(actual_out,
-#                                                          expected_out)
-# 
-# 
-# 
-# def run2(test):
-#     out = test
-#     return out
+def sum_neighbors(matrix, loc):
+    length = len(matrix[0])
+    neighbors = [add_tuple(loc, direction) for direction in ALL_DIRS]
+    neighbors = [(x, y) for x, y in neighbors if (x < length and
+                                                  y < length and
+                                                  x >= 0 and y >= 0)]
+    out = [matrix[y][x] if matrix[y][x] is not None else 0
+           for x, y in neighbors]
+    return max(sum(out), 1)
+
+
+def spiral2(width, height, goal):
+    if width < 1 or height < 1:
+        raise ValueError
+    x, y = width // 2, height // 2 # start near the center
+    dx, dy = SOUTH # initial direction
+    matrix = [[None] * width for _ in range(height)]
+    count = 0
+    while True:
+        count = sum_neighbors(matrix, (x, y))
+        if goal < count:
+            print(count)
+            break
+        matrix[y][x] = count # visit
+        # try to turn right
+        new_dx, new_dy = turn_left[dx,dy]
+        new_x, new_y = x + new_dx, y + new_dy
+        if (0 <= new_x < width and 0 <= new_y < height and
+            matrix[new_y][new_x] is None): # can turn right
+            x, y = new_x, new_y
+            dx, dy = new_dx, new_dy
+        else: # try to move straight
+            x, y = x + dx, y + dy
+            if not (0 <= x < width and 0 <= y < height):
+                return matrix # nowhere to go
+
+
+def print_matrix(matrix):
+    width = len(str(max(el for row in matrix for el in row if el is not None)))
+    fmt = "{:0%dd}" % width
+    for row in matrix:
+        print(" ".join("_"*width if el is None else fmt.format(el) for el in row))
+
+def run2(test):
+    power = closest_perfect_sqr(test)
+    side = int(math.sqrt(power))
+    out = spiral2(side, side, test)
+    return out
 
 
 if __name__ == "__main__":
-    out = run(265149)
+    out = run2(265149)
     print(out)
