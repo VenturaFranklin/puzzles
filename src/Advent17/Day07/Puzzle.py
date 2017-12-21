@@ -108,6 +108,7 @@ If this change were made, its weight would be 60.
 Given that exactly one program is the wrong weight,
 what would its weight need to be to balance the entire tower?
 '''
+from collections import defaultdict
 
 
 def test_p10():
@@ -166,14 +167,50 @@ cntj (57)'''
                                                          expected_out)
 
 
+def find_weight(program, supporting_programs, program_weights):
+    sub_programs = supporting_programs[program][0]
+    total_weight = 0
+    weights = []
+    for sub_program in sub_programs:
+        if sub_program not in supporting_programs:
+            weight = program_weights[sub_program]
+        else:
+            weight = find_weight(sub_program, supporting_programs,
+                                 program_weights)
+        weights.append(weight)
+        total_weight += weight
+    print(weights)
+    if not (len(set(weights)) <= 1):
+        print(program, supporting_programs[program])
+        print([(program_weights[prog], supporting_programs[prog][1]) for prog in supporting_programs[program][0]])
+        raise SystemError
+    total_weight += program_weights[program]
+    supporting_programs[program].append(total_weight)
+    return total_weight
+
+
 def run2(test):
     rows = test.split('\n')
-    out = rows
-    return out
+    supporting_programs = defaultdict(list)
+    program_weights = {}
+    for row in rows:
+        if '->' in row:
+            supporting_program, subprograms = row.split(' -> ')
+            support, support_weight = supporting_program.split(' (')
+            support_weight = int(support_weight[:-1])
+            program_weights[support] = support_weight
+            subprograms = subprograms.split(', ')
+            supporting_programs[support].append(subprograms)
+        else:
+            program, weight = row.split(' (')
+            weight = int(weight[:-1])
+            program_weights[program] = weight
+    weight = find_weight(run(test), supporting_programs, program_weights)
+    return weight
 
 
 if __name__ == "__main__":
     with open('input.txt', 'r') as this_file:
         text = this_file.read()
-        out = run(text[:-1])  # Because the final new line causes problems
+        out = run2(text[:-1])  # Because the final new line causes problems
     print(out)
