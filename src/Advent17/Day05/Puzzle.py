@@ -89,7 +89,7 @@ def test_p20():
 0
 1
 -3'''
-    actual_out = run(testing)
+    actual_out = run2(testing)
     expected_out = 10
     assert actual_out == expected_out, "{} != {}".format(actual_out,
                                                          expected_out)
@@ -102,8 +102,11 @@ def run2(test):
     length = len(rows)
     count = 0
     while new_loc < length and new_loc >= 0:
+        increase = 1
         instruction = rows[new_loc]
-        rows[new_loc] += 1
+        if instruction >= 3:
+            increase = -1
+        rows[new_loc] += increase
         new_loc += instruction
         count += 1
     return count
@@ -112,5 +115,5 @@ def run2(test):
 if __name__ == "__main__":
     with open('input.txt', 'r') as this_file:
         text = this_file.read()
-        out = run(text[:-1])  # Because the final new line causes problems
+        out = run2(text[:-1])  # Because the final new line causes problems
     print(out)
