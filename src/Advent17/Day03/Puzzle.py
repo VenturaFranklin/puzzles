@@ -34,6 +34,8 @@ quare identified in your puzzle input all the way to the access port?
 
 Your puzzle input is 265149.
 '''
+import math
+import numpy as np
 
 
 def test_p10():
@@ -68,8 +70,59 @@ def test_p13():
                                                          expected_out)
 
 
+def manhattan_distance(x, y):
+    return sum(abs(a-b) for a, b in zip(x, y))
+
+
+def closest_perfect_sqr(n):
+    odd = False
+    while not odd:
+        if n % n**0.5 == 0:
+            power = math.pow((math.sqrt(n)), 2)
+            odd = power % 2 == 1
+        n += 1
+    return power
+
+
+N, SOUTH, W, E = (0, -1), (0, 1), (-1, 0), (1, 0) # directions
+# turn_right = {NORTH: E, E: S, S: W, W: NORTH} # old -> new direction
+turn_left = {SOUTH: E, E: N, N: W, W: SOUTH} # old -> new direction
+
+
+def spiral(width, height):
+    if width < 1 or height < 1:
+        raise ValueError
+    x, y = width // 2, height // 2 # start near the center
+    dx, dy = SOUTH # initial direction
+    matrix = [[None] * width for _ in range(height)]
+    count = 0
+    while True:
+        count += 1
+        matrix[y][x] = count # visit
+        # try to turn right
+        new_dx, new_dy = turn_left[dx,dy]
+        new_x, new_y = x + new_dx, y + new_dy
+        if (0 <= new_x < width and 0 <= new_y < height and
+            matrix[new_y][new_x] is None): # can turn right
+            x, y = new_x, new_y
+            dx, dy = new_dx, new_dy
+        else: # try to move straight
+            x, y = x + dx, y + dy
+            if not (0 <= x < width and 0 <= y < height):
+                return matrix # nowhere to go
+
+
 def run(test):
-    out = test
+    power = closest_perfect_sqr(test)
+    side = int(math.sqrt(power))
+    a = spiral(side, side)
+    a = np.array(a)
+    loc = np.where(a==test)
+    loc = (loc[0][0], loc[1][0])
+    print(loc)
+    loc2 = np.where(a==1)
+    loc2 = (loc2[0][0], loc2[1][0])
+    out = manhattan_distance(loc, loc2)
     return out
 
 
