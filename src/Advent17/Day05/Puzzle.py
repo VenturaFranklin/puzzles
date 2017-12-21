@@ -43,6 +43,17 @@ The following steps would be taken before an exit is found:
 In this example, the exit is reached in 5 steps.
 
 How many steps does it take to reach the exit?
+
+--- Part Two ---
+Now, the jumps are even stranger: after each jump,
+if the offset was three or more, instead decrease it by 1.
+Otherwise, increase it by 1 as before.
+
+Using this rule with the above example,
+the process now takes 10 steps,
+and the offset values after finding the exit are left as 2 3 2 3 -1.
+
+How many steps does it now take to reach the exit?
 '''
 
 
@@ -72,19 +83,30 @@ def run(test):
     return count
 
 
-# def test_p20():
-#     testing = '''5\t9\t2\t8\n9\t4\t7\t3\n3\t8\t6\t5'''
-#     actual_out = run2(testing)
-#     expected_out = 9
-#     assert actual_out == expected_out, "{} != {}".format(actual_out,
-#                                                          expected_out)
-# 
-# 
-# 
-# def run2(test):
-#     rows = test.split('\n')
-#     out = test
-#     return out
+def test_p20():
+    testing = '''0
+3
+0
+1
+-3'''
+    actual_out = run(testing)
+    expected_out = 10
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
+
+
+def run2(test):
+    rows = test.split('\n')
+    rows = [int(row) for row in rows]
+    new_loc = 0
+    length = len(rows)
+    count = 0
+    while new_loc < length and new_loc >= 0:
+        instruction = rows[new_loc]
+        rows[new_loc] += 1
+        new_loc += instruction
+        count += 1
+    return count
 
 
 if __name__ == "__main__":
