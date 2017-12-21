@@ -37,7 +37,8 @@ oiii ioii iioi iiio is not valid - any of these words can be
     rearranged to form any other word.
 Under this new system policy, how many passphrases are valid?
 '''
-# from collections import Counter
+import itertools
+from collections import Counter
 
 
 def test_p10():
@@ -73,13 +74,28 @@ oiii ioii iioi iiio'''
                                                          expected_out)
 
 
-def run2(test):
-    out = test
-    return out
+def anagram(words):
+    counters = [Counter(word) for word in words]
+    for a, b in itertools.combinations(counters, 2):
+        if a == b:
+            return False
+    return True
+
+def run2(passphrases):
+    count = 0
+    passphrases = passphrases.split("\n")
+    for passphrase in passphrases:
+        words = passphrase.split(" ")
+        print(words)
+        valid = int(len(set(words)) == len(words))
+        if valid:
+            if anagram(words):
+                count += valid
+    return count
 
 
 if __name__ == "__main__":
     with open('input.txt', 'r') as this_file:
         text = this_file.read()
-        out = run(text[:-1])  # Because the final new line causes problems
+        out = run2(text[:-1])  # Because the final new line causes problems
     print(out)
