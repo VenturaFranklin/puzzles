@@ -65,7 +65,30 @@ def test_p10():
 
 def run(test):
     rows = test.split('\t')
-    return rows
+    rows = [int(row) for row in rows]
+    seen_before = [rows[:]]
+    length = len(rows)
+    count = 0
+    indices = list(range(length))
+    while True:
+        print(rows)
+        count += 1
+        max_val = max(rows)
+        max_loc = rows.index(max_val)
+        rows[max_loc] = 0
+        div, mod = divmod(max_val, length)
+        shiftindices = indices[max_loc+1:] + indices[:max_loc+1]
+#         print("     ", shiftindices)
+        mod_ind = shiftindices[:mod]
+        for _, ind in enumerate(shiftindices):
+            rows[ind] += div
+            if ind in mod_ind:
+                rows[ind] += 1
+        if rows in seen_before:
+            break
+        else:
+            seen_before.append(rows[:])
+    return count
 
 
 # def test_p20():
