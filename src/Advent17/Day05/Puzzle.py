@@ -60,8 +60,16 @@ def test_p10():
 
 def run(test):
     rows = test.split('\n')
-    out = test
-    return out
+    rows = [int(row) for row in rows]
+    new_loc = 0
+    length = len(rows)
+    count = 0
+    while new_loc < length and new_loc >= 0:
+        instruction = rows[new_loc]
+        rows[new_loc] += 1
+        new_loc += instruction
+        count += 1
+    return count
 
 
 # def test_p20():
