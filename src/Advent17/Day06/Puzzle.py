@@ -103,21 +103,44 @@ def run(test):
     return count
 
 
-# def test_p20():
-#     testing = '''5\t9\t2\t8\n9\t4\t7\t3\n3\t8\t6\t5'''
-#     actual_out = run2(testing)
-#     expected_out = 9
-#     assert actual_out == expected_out, "{} != {}".format(actual_out,
-#                                                          expected_out)
+def test_p20():
+    testing = '''0\t2\t7\t0'''
+    actual_out = run2(testing)
+    expected_out = 4
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
 
 
 def run2(test):
     rows = test.split('\t')
-    return rows
+    rows = [int(row) for row in rows]
+    seen_before = [rows[:]]
+    length = len(rows)
+    count = 0
+    indices = list(range(length))
+    while True:
+#         print(rows)
+        count += 1
+        max_val = max(rows)
+        max_loc = rows.index(max_val)
+        rows[max_loc] = 0
+        div, mod = divmod(max_val, length)
+        shiftindices = indices[max_loc+1:] + indices[:max_loc+1]
+#         print("     ", shiftindices)
+        mod_ind = shiftindices[:mod]
+        for _, ind in enumerate(shiftindices):
+            rows[ind] += div
+            if ind in mod_ind:
+                rows[ind] += 1
+        if rows in seen_before:
+            print(len(seen_before), seen_before.index(rows))
+            return len(seen_before) - seen_before.index(rows)
+        else:
+            seen_before.append(rows[:])
 
 
 if __name__ == "__main__":
     with open('input.txt', 'r') as this_file:
         text = this_file.read()
-        out = run(text[:-1])  # Because the final new line causes problems
+        out = run2(text[:-1])  # Because the final new line causes problems
     print(out)
