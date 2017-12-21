@@ -35,6 +35,14 @@ and leaves that to you to determine.
 
 What is the largest value in any register after
 completing the instructions in your puzzle input?
+
+--- Part Two ---
+To be safe, the CPU also needs to know the highest value held
+in any register during this process so that it can decide how
+much memory to allocate to these operations.
+For example, in the above instructions,
+the highest value ever held was 10
+(in register c after the third instruction was evaluated).
 '''
 from collections import defaultdict
 import operator
@@ -78,18 +86,35 @@ def run(test):
     return max([val for val in values.values()])
 
 
-# def test_p20():
-#     testing = '''5\t9\t2\t8\n9\t4\t7\t3\n3\t8\t6\t5'''
-#     actual_out = run2(testing)
-#     expected_out = 9
-#     assert actual_out == expected_out, "{} != {}".format(actual_out,
-#                                                          expected_out)
+def test_p20():
+    testing = testing = '''b inc 5 if a > 1
+a inc 1 if b < 5
+c dec -10 if a >= 1
+c inc -20 if c == 10'''
+    actual_out = run2(testing)
+    expected_out = 10
+    assert actual_out == expected_out, "{} != {}".format(actual_out,
+                                                         expected_out)
 
 
 def run2(test):
     rows = test.split('\n')
-    out = rows
-    return out
+    values = defaultdict(int)
+    for row in rows:
+        instructions, condition = row.split(' if ')
+        var_check, op, test = condition.split(' ')
+        var_check_val = values[var_check]
+        if 'inc' in instructions:
+            change = 1
+            direction = ' inc '
+        else:
+            change = -1
+            direction = ' dec '
+        if ops[op](var_check_val, int(test)):
+            var_change, val = instructions.split(direction)
+            values[var_change] += int(val) * change
+    print(values)
+    return max([val for val in values.values()])
 
 
 if __name__ == "__main__":
