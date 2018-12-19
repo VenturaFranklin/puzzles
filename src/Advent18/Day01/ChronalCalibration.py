@@ -53,6 +53,32 @@ Starting with a frequency of zero, what is the resulting frequency
 after all of the changes in frequency have been applied?
 
 --- Part Two ---
+You notice that the device repeats the same frequency change list over and over.
+To calibrate the device, you need to find the first frequency it reaches twice.
+
+For example, using the same list of changes above,
+the device would loop as follows:
+
+Current frequency  0, change of +1; resulting frequency  1.
+Current frequency  1, change of -2; resulting frequency -1.
+Current frequency -1, change of +3; resulting frequency  2.
+Current frequency  2, change of +1; resulting frequency  3.
+(At this point, the device continues from the start of the list.)
+Current frequency  3, change of +1; resulting frequency  4.
+Current frequency  4, change of -2; resulting frequency  2,
+    which has already been seen.
+In this example, the first frequency reached twice is 2.
+Note that your device might need to repeat its list of frequency changes many
+times before a duplicate frequency is found,
+and that duplicates might be found while in the middle of processing the list.
+
+Here are other examples:
+
++1, -1 first reaches 0 twice.
++3, +3, +4, -2, -4 first reaches 10 twice.
+-6, +3, +8, +5, -6 first reaches 5 twice.
++7, +7, -2, -7, -4 first reaches 14 twice.
+What is the first frequency your device reaches twice?
 
 '''
 
@@ -78,10 +104,45 @@ def test1_3_run():
     assert expected_out == actual_out
 
 
-def test2_1_run2():
+def test1_4_run():
     instructions = ['+1', '-2', '+3', '+1']
     actual_out = run(instructions)
     expected_out = 3
+    assert expected_out == actual_out
+
+
+def test1_1_run2():
+    instructions = ['+1', '-1']
+    expected_out = 0
+    actual_out = run2(instructions)
+    assert expected_out == actual_out
+
+
+def test1_2_run2():
+    instructions = ['+3', '+3', '+4', '-2', '-4']
+    expected_out = 10
+    actual_out = run2(instructions)
+    assert expected_out == actual_out
+
+
+def test1_3_run2():
+    instructions = ['-6', '+3', '+8', '+5', '-6']
+    expected_out = 5
+    actual_out = run2(instructions)
+    assert expected_out == actual_out
+
+
+def test1_4_run2():
+    instructions = ['+7', '+7', '-2', '-7', '-4']
+    actual_out = run2(instructions)
+    expected_out = 14
+    assert expected_out == actual_out
+
+
+def test1_4_run2():
+    instructions = ['+1', '-2', '+3', '+1']
+    actual_out = run2(instructions)
+    expected_out = 2
     assert expected_out == actual_out
 
 
@@ -91,11 +152,24 @@ def run(instructions):
         current_freq += int(instruct)
     return current_freq
 
+
+def run2(instructions, current_freq=0, previous_freqs=None):
+    if previous_freqs is None:
+        previous_freqs = {current_freq}
+    for instruct in instructions:
+        current_freq += int(instruct)
+        if current_freq in previous_freqs:
+            return current_freq
+        else:
+            previous_freqs.append(current_freq)
+    return run2(instructions, current_freq, previous_freqs)
+
+
 if __name__ == "__main__":
     with open('PuzzleInput.txt', 'r') as this_file:
         instructions = []
         for instruction_line in this_file:
             instruction_line = instruction_line.replace('\n', '')
             instructions.append(instruction_line)
-        out = run(instructions)
+        out = run2(instructions)
     print(out)
