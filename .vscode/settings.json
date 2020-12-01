@@ -1,0 +1,9 @@
+{
+    "python.pythonPath": "D:\\workspace\\.virtualenvs\\puzzles\\Scripts\\python.exe",
+    "python.testing.pytestArgs": [
+        "src"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true
+}
