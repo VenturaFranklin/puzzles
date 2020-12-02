@@ -13,7 +13,11 @@ def test1_1_run():
 
 
 def test1_1_run2():
-    instructions = []
-    expected_out = 0
+    instructions = [
+        "1-3 a: abcde",
+        "1-3 b: cdefg",
+        "2-9 c: ccccccccc",
+    ]
+    expected_out = 1
     actual_out = run2(instructions)
     assert expected_out == actual_out
