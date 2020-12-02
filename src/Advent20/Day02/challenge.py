@@ -67,7 +67,17 @@ def run(instructions):
 
 
 def run2(instructions):
-    return 0
+    passing = 0
+    for instruction in instructions:
+        policy, letter, password = instruction.split(" ")
+        letter = letter.replace(":", "")
+        loc_1, loc_2 = policy.split("-")
+        first = password[int(loc_1) - 1] == letter
+        second = password[int(loc_2) - 1] == letter
+        tests = [first, second]
+        if any(tests) and not all(tests):
+            passing += 1
+    return passing
 
 
 if __name__ == "__main__":
@@ -77,5 +87,5 @@ if __name__ == "__main__":
             instruction_line = instruction_line.replace("\n", "")
             instructions.append(instruction_line)
         out = run(instructions)
-        # out = run2(instructions)
+        out = run2(instructions)
     print(out)
