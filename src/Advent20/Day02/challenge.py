@@ -35,7 +35,15 @@ from pathlib import Path
 
 
 def run(instructions):
-    return 0
+    passing = 0
+    for instruction in instructions:
+        policy, letter, password = instruction.split(" ")
+        letter = letter.replace(":", "")
+        minimum, maximum = policy.split("-")
+        count = password.count(letter)
+        if int(maximum) >= count >= int(minimum):
+            passing += 1
+    return passing
 
 
 def run2(instructions):
@@ -48,6 +56,6 @@ if __name__ == "__main__":
         for instruction_line in this_file:
             instruction_line = instruction_line.replace("\n", "")
             instructions.append(instruction_line)
-        # out = run(instructions)
-        out = run2(instructions)
+        out = run(instructions)
+        # out = run2(instructions)
     print(out)
